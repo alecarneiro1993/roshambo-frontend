@@ -1,8 +1,8 @@
-<div class="container">
-  <mat-grid-list cols="2" rowHeight="10em">
-    <mat-grid-tile colspan="2">
-      <app-game-title />
-    </mat-grid-tile>
-  </mat-grid-list>
-  <router-outlet></router-outlet>
+<div id="main-container">
+  <div id="title-container">
+    <app-game-title />
+  </div>
+  <div id="container">
+    <router-outlet></router-outlet>
+  </div>
 </div>
