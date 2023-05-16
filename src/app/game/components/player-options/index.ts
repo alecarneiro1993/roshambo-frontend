@@ -1,1 +1,4 @@
-export { PlayerOptionsComponent } from './player-options.component';
+export {
+  PlayerOptionsComponent,
+  PlayerOptions,
+} from './player-options.component';

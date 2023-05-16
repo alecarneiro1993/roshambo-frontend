@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class PlayerAvatarComponent {
   @Input() src: string | undefined;
   @Input() playerName: string | undefined;
+  @Input() playerHealth: string | undefined;
 }

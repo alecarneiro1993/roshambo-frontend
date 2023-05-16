@@ -2,22 +2,27 @@
   <div id="game-container">
     <div id="main-game-container">
       <app-player-avatar
+        playerHealth="{{ player.health }}"
         playerName="{{ player.name }}"
         src="{{ player.img }}"
       />
       <app-player-options
         playerType="{{ player.type }}"
         currentChoice="{{ gameChoices.player }}"
-        (sendChoice)="handlePlayerChoice($event)"
+        (setPlayerChoice)="handlePlayerChoice($event)"
       />
-      <app-player-options playerType="{{ computer.type }}" />
+      <app-player-options
+        playerType="{{ computer.type }}"
+        currentChoice="{{ gameChoices.computer }}"
+      />
       <app-player-avatar
+        playerHealth="{{ computer.health }}"
         playerName="{{ computer.name }}"
         src="{{ computer.img }}"
       />
     </div>
     <div id="submit-game-container">
-      <button *ngIf="gameChoices.player">FIGHT</button>
+      <button *ngIf="gameChoices.player" (click)="submit()">FIGHT</button>
     </div>
   </div>
 </div>

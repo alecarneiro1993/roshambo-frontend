@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 
-enum PlayerOptions {
+export enum PlayerOptions {
   Rock = 'Rock',
   Paper = 'Paper',
   Scissor = 'Scissor',
@@ -17,7 +17,7 @@ export class PlayerOptionsComponent {
   @Input() playerType: string;
   @Input() currentChoice: string;
 
-  @Output() sendChoice: EventEmitter<{ type: string; value: string }> =
+  @Output() setPlayerChoice: EventEmitter<{ type: string; value: string }> =
     new EventEmitter<{ type: string; value: string }>();
 
   constructor() {
@@ -29,7 +29,7 @@ export class PlayerOptionsComponent {
   handleChoice(value: string) {
     if (this.playerType === 'computer') return; // guard clause
 
-    this.sendChoice.emit({
+    this.setPlayerChoice.emit({
       type: this.playerType,
       value,
     });

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { Player } from '../models';
+import { PlayerOptions } from './components';
 
 interface GameChoices {
   player: string | null;
@@ -18,7 +19,7 @@ export class GameComponent {
   @Input() gameChoices: GameChoices;
 
   constructor() {
-    this.gameChoices = { player: null, computer: null };
+    this.gameChoices = { player: null, computer: 'Rock' }; // value for computer set for testing
     this.player = new Player('Player 1 (You)', 'player', 'ryu.png');
     this.computer = new Player('CPU', 'computer', 'sagat.png');
   }
@@ -26,5 +27,20 @@ export class GameComponent {
   handlePlayerChoice(event: { type: string; value: string }): void {
     const { type, value } = event;
     this.gameChoices = { ...this.gameChoices, [type]: value };
+  }
+
+  submit() {
+    if (!this.areChoicesValid()) return;
+
+    this.computer.takeHit();
+  }
+
+  private areChoicesValid() {
+    const values = Object.values(this.gameChoices);
+    const possibleOptions = Object.keys(PlayerOptions);
+    return values.every(
+      (value) =>
+        value !== null && value !== '' && possibleOptions.includes(value)
+    );
   }
 }
