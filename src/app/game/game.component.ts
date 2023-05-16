@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Player } from '../models';
-import { PlayerOptions } from './components';
+import { Player, PlayerOptions } from '../models';
 
 interface GameChoices {
   player: string | null;

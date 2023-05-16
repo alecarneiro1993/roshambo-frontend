@@ -1,1 +1,2 @@
-export { Player } from './player';
+export { Player } from './player.model';
+export { PlayerOptions } from './enums.model';

@@ -1,10 +1,6 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 
-export enum PlayerOptions {
-  Rock = 'Rock',
-  Paper = 'Paper',
-  Scissor = 'Scissor',
-}
+import { PlayerOptions } from 'src/app/models';
 
 @Component({
   selector: 'app-player-options',
