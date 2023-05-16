@@ -5,9 +5,24 @@ div#page-container
 #title h1
   font-family: Tragicastle
   font-size: 6rem
+  letter-spacing: 0.5rem
 
 #prompt h2
   font-family: Tiquet
   font-size: 3.5rem
   color: yellow
   letter-spacing: 0.3rem
+
+.blinking
+  animation: opacity 1.5s linear infinite
+  opacity: 1
+
+@keyframes opacity
+  0%
+    opacity: 1
+
+  50%
+    opacity: 0
+
+  100%
+    opacity: 1
