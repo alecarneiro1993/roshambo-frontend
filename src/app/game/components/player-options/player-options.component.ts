@@ -1,5 +1,11 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 
+enum PlayerOptions {
+  Rock = 'Rock',
+  Paper = 'Paper',
+  Scissor = 'Scissor',
+}
+
 @Component({
   selector: 'app-player-options',
   templateUrl: './player-options.component.html',
@@ -15,7 +21,7 @@ export class PlayerOptionsComponent {
     new EventEmitter<{ type: string; value: string }>();
 
   constructor() {
-    this.options = ['Rock', 'Paper', 'Scissor'];
+    this.options = Object.keys(PlayerOptions);
     this.playerType = '';
     this.currentChoice = '';
   }

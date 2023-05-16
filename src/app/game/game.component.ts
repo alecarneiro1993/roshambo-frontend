@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+import { Player } from '../models';
+
 interface GameChoices {
   player: string | null;
   computer: string | null;
@@ -10,10 +12,15 @@ interface GameChoices {
   styleUrls: ['./game.component.sass'],
 })
 export class GameComponent {
+  public player: Player;
+  public computer: Player;
+
   @Input() gameChoices: GameChoices;
 
   constructor() {
     this.gameChoices = { player: null, computer: null };
+    this.player = new Player('Player 1 (You)', 'player', 'ryu.png');
+    this.computer = new Player('CPU', 'computer', 'sagat.png');
   }
 
   handlePlayerChoice(event: { type: string; value: string }): void {
