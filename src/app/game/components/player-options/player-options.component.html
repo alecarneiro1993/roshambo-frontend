@@ -1,5 +1,14 @@
-<div id="player-options">
-  <button mat-button class="option-btn">Rock</button>
-  <button mat-button class="option-btn">Paper</button>
-  <button mat-button class="option-btn">Scissor</button>
+<div class="player-options">
+  <button
+    [ngClass]="{
+      'player-option-btn-disable': playerType !== 'player',
+      'player-option-btn-current-choice': currentChoice === option
+    }"
+    [disabled]="playerType !== 'player'"
+    (click)="handleChoice(option)"
+    class="player-option-btn"
+    *ngFor="let option of options"
+  >
+    {{ option }}
+  </button>
 </div>

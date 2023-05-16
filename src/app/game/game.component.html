@@ -1,8 +1,23 @@
 <div id="content-container">
   <div id="game-container">
-    <app-player-avatar src="../../assets/images/ryu.png" />
-    <app-player-options />
-    <app-player-options />
-    <app-player-avatar src="../../assets/images/sagat.png" />
+    <div id="main-game-container">
+      <app-player-avatar
+        playerName="Player 1 (You)"
+        imgSrc="../../assets/images/ryu.png"
+      />
+      <app-player-options
+        playerType="player"
+        currentChoice="{{ gameChoices.player }}"
+        (sendChoice)="handlePlayerChoice($event)"
+      />
+      <app-player-options playerType="computer" />
+      <app-player-avatar
+        playerName="Player 2"
+        imgSrc="../../assets/images/sagat.png"
+      />
+    </div>
+    <div id="submit-game-container">
+      <button *ngIf="gameChoices.player">FIGHT</button>
+    </div>
   </div>
 </div>

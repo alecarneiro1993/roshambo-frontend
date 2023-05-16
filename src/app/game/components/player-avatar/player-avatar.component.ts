@@ -6,5 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./player-avatar.component.sass'],
 })
 export class PlayerAvatarComponent {
-  @Input() src: string | undefined;
+  @Input() imgSrc: string | undefined;
+  @Input() playerName: string | undefined;
 }
