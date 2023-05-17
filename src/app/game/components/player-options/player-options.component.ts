@@ -10,8 +10,8 @@ export class PlayerOptionsComponent {
   @Input() currentChoice: string;
   @Input() options: string[];
 
-  @Output() setPlayerChoice: EventEmitter<{ type: string; value: string }> =
-    new EventEmitter<{ type: string; value: string }>();
+  @Output() setPlayerChoice: EventEmitter<{ value: string }> =
+    new EventEmitter<{ value: string }>();
 
   constructor() {
     this.playerType = '';
@@ -23,7 +23,6 @@ export class PlayerOptionsComponent {
     if (this.playerType === 'computer') return; // guard clause
 
     this.setPlayerChoice.emit({
-      type: this.playerType,
       value,
     });
   }

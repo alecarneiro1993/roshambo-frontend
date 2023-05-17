@@ -1,1 +1,1 @@
-export { GameService, IPlayerOptionsResponse } from './game.service';
+export { GameService, IResponse } from './game.service';
