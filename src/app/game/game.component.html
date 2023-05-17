@@ -8,12 +8,12 @@
       />
       <app-player-options
         playerType="{{ player.type }}"
-        currentChoice="{{ gameChoices.player }}"
+        currentChoice="{{ player.choice }}"
         (setPlayerChoice)="handlePlayerChoice($event)"
       />
       <app-player-options
         playerType="{{ computer.type }}"
-        currentChoice="{{ gameChoices.computer }}"
+        currentChoice="{{ computer.choice }}"
       />
       <app-player-avatar
         playerHealth="{{ computer.health }}"
@@ -22,7 +22,7 @@
       />
     </div>
     <div id="submit-game-container">
-      <button *ngIf="gameChoices.player" (click)="submit()">FIGHT</button>
+      <button *ngIf="player.choice" (click)="submit()">FIGHT</button>
     </div>
   </div>
 </div>

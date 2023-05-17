@@ -1,3 +1,5 @@
+import { PlayerOptions } from './enums.model';
+
 interface IPlayer {
   name: string;
   type: string;
@@ -6,6 +8,7 @@ interface IPlayer {
 }
 
 export class Player implements IPlayer {
+  private _choice: string;
   public name;
   public type;
   public health;
@@ -16,9 +19,22 @@ export class Player implements IPlayer {
     this.type = type;
     this.health = 100;
     this.img = `../../assets/images/${img}`;
+    this._choice = '';
   }
 
-  public takeHit() {
-    if (this.health > 0) this.health = this.health - 20; // just testing
+  public get choice(): string {
+    return this._choice;
+  }
+
+  public set choice(value: string) {
+    const isValid = Object.keys(PlayerOptions).includes(value);
+    if (!isValid && value !== '')
+      throw new Error('Invalid type of Player choice');
+
+    this._choice = value;
+  }
+
+  public takeHit(dmgAmount: string) {
+    if (this.health > 0) this.health = this.health - Number(dmgAmount);
   }
 }

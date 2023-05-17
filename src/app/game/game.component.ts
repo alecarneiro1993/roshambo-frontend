@@ -1,11 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { Player, PlayerOptions } from '../models';
+import { Player } from '../models';
+import { TurnResolverService } from './services';
 
-interface GameChoices {
-  player: string | null;
-  computer: string | null;
-}
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -15,31 +12,29 @@ export class GameComponent {
   public player: Player;
   public computer: Player;
 
-  @Input() gameChoices: GameChoices;
-
-  constructor() {
-    this.gameChoices = { player: null, computer: 'Rock' }; // value for computer set for testing
+  constructor(private turnService: TurnResolverService) {
     this.player = new Player('Player 1 (You)', 'player', 'ryu.png');
     this.computer = new Player('CPU', 'computer', 'sagat.png');
   }
 
   handlePlayerChoice(event: { type: string; value: string }): void {
     const { type, value } = event;
-    this.gameChoices = { ...this.gameChoices, [type]: value };
+
+    if (type === 'player') {
+      this.player.choice = value;
+    } else {
+      this.computer.choice = value;
+    }
   }
 
   submit() {
-    if (!this.areChoicesValid()) return;
-
-    this.computer.takeHit();
+    this.computer.choice = 'Rock';
+    this.turnService.resolve(this.player, this.computer);
+    this.resetTurn();
   }
 
-  private areChoicesValid() {
-    const values = Object.values(this.gameChoices);
-    const possibleOptions = Object.keys(PlayerOptions);
-    return values.every(
-      (value) =>
-        value !== null && value !== '' && possibleOptions.includes(value)
-    );
+  private resetTurn() {
+    this.player.choice = '';
+    this.computer.choice = '';
   }
 }
