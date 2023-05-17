@@ -1,20 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Player } from '../models';
-import { TurnResolverService } from './services';
+import { GameService, IPlayerOptionsResponse } from './services';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.sass'],
 })
-export class GameComponent {
+export class GameComponent implements OnInit {
   public player: Player;
   public computer: Player;
+  public options: string[];
 
-  constructor(private turnService: TurnResolverService) {
+  constructor(private gameService: GameService) {
     this.player = new Player('Player 1 (You)', 'player', 'ryu.png');
     this.computer = new Player('CPU', 'computer', 'sagat.png');
+    this.options = [];
+  }
+
+  ngOnInit() {
+    this.gameService
+      .getPlayerOptions()
+      .subscribe(({ data }: IPlayerOptionsResponse) => (this.options = data));
   }
 
   handlePlayerChoice(event: { type: string; value: string }): void {
@@ -28,8 +36,6 @@ export class GameComponent {
   }
 
   submit() {
-    this.computer.choice = 'Rock';
-    this.turnService.resolve(this.player, this.computer);
     this.resetTurn();
   }
 

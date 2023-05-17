@@ -7,11 +7,13 @@
         src="{{ player.img }}"
       />
       <app-player-options
+        [options]="options"
         playerType="{{ player.type }}"
         currentChoice="{{ player.choice }}"
         (setPlayerChoice)="handlePlayerChoice($event)"
       />
       <app-player-options
+        [options]="options"
         playerType="{{ computer.type }}"
         currentChoice="{{ computer.choice }}"
       />

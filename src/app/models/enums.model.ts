@@ -1,5 +1,5 @@
 export enum PlayerOptions {
-  Rock = 'Rock',
-  Paper = 'Paper',
-  Scissor = 'Scissor',
+  ROCK = 'ROCK',
+  PAPER = 'PAPER',
+  SCISSOR = 'SCISSOR',
 }
