@@ -7,6 +7,7 @@ import {
   PlayerOptionsComponent,
   HealthBarComponent,
 } from './components';
+import { OutcomeComponent } from './components/outcome/outcome.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import {
     PlayerAvatarComponent,
     PlayerOptionsComponent,
     HealthBarComponent,
+    OutcomeComponent,
   ],
   imports: [CommonModule],
 })

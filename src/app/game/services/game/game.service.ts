@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface IResponse {
-  data: string[] | object;
+  data: Record<string, unknown>;
 }
 
 @Injectable({
@@ -20,9 +20,9 @@ export class GameService {
     return this.http.get<IResponse>('http://localhost:8080/api/game/players');
   }
 
-  getComputerChoice(): Observable<IResponse> {
-    return this.http.get<IResponse>(
-      'http://localhost:8080/api/game/computer/choice'
-    );
+  resolveGameTurn(playerChoice: string): Observable<IResponse> {
+    return this.http.post<IResponse>('http://localhost:8080/api/game/resolve', {
+      playerChoice,
+    });
   }
 }

@@ -9,20 +9,23 @@ export class PlayerOptionsComponent {
   @Input() playerType: string;
   @Input() currentChoice: string;
   @Input() options: string[];
+  @Input() isAbleToPlay: boolean;
 
-  @Output() setPlayerChoice: EventEmitter<{ value: string }> =
-    new EventEmitter<{ value: string }>();
+  @Output() setPlayerChoice: EventEmitter<{ type: string; value: string }> =
+    new EventEmitter<{ type: string; value: string }>();
 
   constructor() {
     this.playerType = '';
     this.currentChoice = '';
     this.options = [];
+    this.isAbleToPlay = true;
   }
 
-  handleChoice(value: string) {
-    if (this.playerType === 'computer') return; // guard clause
+  handleChoice(type: string, value: string) {
+    if (this.playerType !== 'player') return; // guard clause
 
     this.setPlayerChoice.emit({
+      type,
       value,
     });
   }

@@ -10,7 +10,8 @@
         [options]="options"
         currentChoice="{{ choices.playerChoice }}"
         playerType="{{ player.type }}"
-        (setPlayerChoice)="handlePlayerChoice($event)"
+        [isAbleToPlay]="isAbleToPlay"
+        (setPlayerChoice)="handleChoice($event)"
       />
       <app-player-options
         [options]="options"
@@ -23,8 +24,13 @@
         src="{{ computer.image }}"
       />
     </div>
+    <div *ngIf="message" id="game-message-container">
+      <span>{{ message }}</span>
+    </div>
     <div id="submit-game-container">
-      <button *ngIf="choices.playerChoice" (click)="submit()">FIGHT</button>
+      <button *ngIf="choices.playerChoice && !message" (click)="submit()">
+        FIGHT
+      </button>
     </div>
   </div>
 </div>
