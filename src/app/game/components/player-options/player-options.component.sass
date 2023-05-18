@@ -1,0 +1,34 @@
+.player-option-btn
+  font-family: Tiquet
+  color: white
+  background-color: transparent
+  border: 0
+  font-size: 1.5rem
+  margin: 0 1rem 0 1rem
+  &::before
+    content: '▼'
+    font-size: 1rem
+    position: relative
+    top: -25px
+    left: 50%
+    color: #000c72
+  &:hover
+    cursor: pointer
+    &::before
+      color: white
+
+.player-option-btn-disable
+  &:hover
+    cursor: not-allowed
+    &::before
+      color: #000c72
+
+.player-option-btn-current-choice
+  &::before
+    color: white
+
+.player-option-btn-disable-turn
+  &:hover
+    cursor: not-allowed
+    &::before
+      color: white
