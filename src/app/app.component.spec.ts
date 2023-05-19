@@ -27,7 +27,6 @@ describe('AppComponent', () => {
 
     it('should render title and subtitle', () => {
       const fixture = TestBed.createComponent(AppComponent);
-      fixture.detectChanges();
       const compiled = fixture.nativeElement as HTMLElement;
       expect(compiled.querySelector('.game-title')?.textContent).toContain(
         'Roshambo'
