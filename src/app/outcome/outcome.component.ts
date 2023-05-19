@@ -14,9 +14,7 @@ export class OutcomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.winner) {
-      this.router.navigate(['/']);
-    }
+    !this.winner && this.router.navigate(['/']);
   }
 
   restartGame() {
