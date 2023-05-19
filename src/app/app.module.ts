@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeModule } from './home';
 import { GameModule } from './game';
 import { OutcomeModule } from './outcome';
-import { SharedModule } from './shared';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +18,6 @@ import { SharedModule } from './shared';
     HomeModule,
     GameModule,
     OutcomeModule,
-    SharedModule,
     HttpClientModule,
   ],
   providers: [],
