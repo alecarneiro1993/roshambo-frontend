@@ -19,7 +19,7 @@ export class OutcomeComponent implements OnInit {
     }
   }
 
-  resetGame() {
-    this.router.navigate(['/game']);
+  restartGame() {
+    this.router.navigate(['/']);
   }
 }

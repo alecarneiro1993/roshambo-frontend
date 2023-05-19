@@ -1,1 +1,1 @@
-export { PlayerOption } from './playerOption.type';
+export { Option } from './option.type';
