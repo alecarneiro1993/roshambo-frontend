@@ -1,6 +1,6 @@
-import { PlayerOption } from '../types';
+import { Option } from '../types';
 
 export interface IChoice {
-  playerChoice: PlayerOption | null;
-  computerChoice: PlayerOption | null;
+  playerChoice: Option | null;
+  computerChoice: Option | null;
 }

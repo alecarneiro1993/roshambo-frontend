@@ -25,4 +25,10 @@ export class GameService {
       playerChoice,
     });
   }
+  resetGame(): Observable<IResponse> {
+    return this.http.post<IResponse>(
+      'http://localhost:8080/api/game/reset',
+      {}
+    );
+  }
 }

@@ -1,5 +1,9 @@
 <div class="player-container">
-  <app-health-bar currentHealth="{{ playerHealth }}" />
-  <h3 class="player-title">{{ playerName }}</h3>
-  <img class="player-avatar" src="{{ src }}" alt="Player avatar image" />
+  <app-health-bar currentHealth="{{ player.health }}" />
+  <h3 class="player-title">{{ player.name }}</h3>
+  <img
+    class="player-avatar"
+    src="{{ player.image }}"
+    alt="Player avatar image"
+  />
 </div>

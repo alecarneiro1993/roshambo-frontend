@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeModule } from './home';
 import { GameModule } from './game';
+import { OutcomeModule } from './outcome';
 import { SharedModule } from './shared';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { SharedModule } from './shared';
     BrowserAnimationsModule,
     HomeModule,
     GameModule,
+    OutcomeModule,
     SharedModule,
     HttpClientModule,
   ],

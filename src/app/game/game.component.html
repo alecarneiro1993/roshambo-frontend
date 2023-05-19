@@ -1,34 +1,33 @@
-<div id="content-container">
+<div class="content-container">
+  <div id="reset-game-container">
+    <button id="reset-btn" class="game-btn" (click)="resetGame()">RESET</button>
+  </div>
   <div id="game-container">
     <div id="main-game-container">
-      <app-player-avatar
-        playerHealth="{{ player.health }}"
-        playerName="{{ player.name }}"
-        src="{{ player.image }}"
-      />
+      <app-player-avatar [player]="players['player']" />
       <app-player-options
         [options]="options"
         currentChoice="{{ choices.playerChoice }}"
-        playerType="{{ player.type }}"
+        playerType="{{ players['player'].type }}"
         [isAbleToPlay]="isAbleToPlay"
         (setPlayerChoice)="handleChoice($event)"
       />
       <app-player-options
         [options]="options"
         currentChoice="{{ choices.computerChoice }}"
-        playerType="{{ computer.type }}"
+        playerType="{{ players['computer'].type }}"
       />
-      <app-player-avatar
-        playerHealth="{{ computer.health }}"
-        playerName="{{ computer.name }}"
-        src="{{ computer.image }}"
-      />
+      <app-player-avatar [player]="players['computer']" />
     </div>
     <div *ngIf="message" id="game-message-container">
       <span>{{ message }}</span>
     </div>
     <div id="submit-game-container">
-      <button *ngIf="choices.playerChoice && !message" (click)="submit()">
+      <button
+        class="game-btn"
+        *ngIf="choices.playerChoice && !message"
+        (click)="submit()"
+      >
         FIGHT
       </button>
     </div>
