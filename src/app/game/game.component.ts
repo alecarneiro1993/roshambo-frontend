@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { IPlayer, IChoice } from '../shared/interfaces';
 import { PlayerOption } from '../shared/types';
@@ -17,7 +18,7 @@ export class GameComponent implements OnInit {
   public message: string;
   public isAbleToPlay: boolean;
 
-  constructor(private gameService: GameService) {
+  constructor(private gameService: GameService, private router: Router) {
     this.player = {
       name: '',
       type: '',
@@ -76,16 +77,18 @@ export class GameComponent implements OnInit {
   }
 
   private showTurnOutcome(turnResult: number, damage: number) {
-    console.log(turnResult, damage);
     this.setTurnMessage(turnResult, damage);
     setTimeout(() => {
-      if (this.isGameOver()) {
-        this.setGameOverMessage(
-          this.computer.health == 0 ? 'player' : 'computer'
-        );
-      } else {
-        this.resetTurn();
+      if (!this.isGameOver()) {
+        return this.resetTurn();
       }
+
+      const winner = this.computer.health == 0 ? this.player : this.computer;
+      this.router.navigate(['/outcome'], {
+        queryParams: {
+          winner: winner.name,
+        },
+      });
     }, 2000);
   }
 
@@ -114,10 +117,6 @@ export class GameComponent implements OnInit {
 
   private handleMessage(msg: string) {
     this.message = msg;
-  }
-
-  private setGameOverMessage(winner: string) {
-    this.handleMessage(`${winner.toUpperCase()} has won the fight!`);
   }
 
   private setTurnMessage(turnResult: number, damage: number) {
