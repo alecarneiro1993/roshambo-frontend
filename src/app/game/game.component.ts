@@ -123,7 +123,6 @@ export class GameComponent implements OnInit {
   private fetchOptions() {
     this.gameService.getPlayerOptions().subscribe((response) => {
       if (!('data' in response)) {
-        console.log('caralho');
         return this.goToHomePage();
       }
 

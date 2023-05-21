@@ -26,10 +26,8 @@ describe('HomeComponent', () => {
 
   describe('page content', () => {
     it('should show a blinking text', () => {
-      const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('h2.blinking')?.textContent).toContain(
-        'Press ENTER to start'
-      );
+      const element = fixture.nativeElement.querySelector('h2.blinking');
+      expect(element.textContent).toContain('Press ENTER to start');
     });
   });
 

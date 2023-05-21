@@ -20,6 +20,10 @@ describe('OutcomeComponent', () => {
     component = fixture.componentInstance;
   });
 
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
   describe("when there's no winner", () => {
     it('navigates to Home page', inject([Router], async (router: Router) => {
       spyOn(router, 'navigate').and.stub();
