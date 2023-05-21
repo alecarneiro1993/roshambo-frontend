@@ -22,7 +22,7 @@ export class PlayerOptionsComponent {
   }
 
   handleChoice(type: string, value: string) {
-    if (this.playerType !== 'player') return; // guard clause
+    if (this.playerType !== 'player') return;
 
     this.setPlayerChoice.emit({
       type,
