@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgZone } from '@angular/core';
 
 import { IPlayer, IChoice } from '../shared/interfaces';
 import { Option } from '../shared/types';
-import { GameService, IResponse } from './services';
+import { GameService } from './services';
 
 @Component({
   selector: 'app-game',
@@ -17,7 +18,11 @@ export class GameComponent implements OnInit {
   public message: string;
   public isAbleToPlay: boolean;
 
-  constructor(private gameService: GameService, private router: Router) {
+  constructor(
+    private gameService: GameService,
+    private _router: Router,
+    private _ngZone: NgZone
+  ) {
     this.players = {
       player: { name: '', type: '', image: '', health: 0 },
       computer: { name: '', type: '', image: '', health: 0 },
@@ -34,6 +39,7 @@ export class GameComponent implements OnInit {
 
   handleChoice({ type, value }: { type: string; value: string }): void {
     if (!this.isAbleToPlay && type == 'player') return;
+
     this.choices = {
       ...this.choices,
       [`${type}Choice`]: value as Option,
@@ -41,9 +47,13 @@ export class GameComponent implements OnInit {
   }
 
   resetGame() {
-    this.gameService.resetGame().subscribe(({ data }) => {
-      this.setPlayers(data['players'] as IPlayer[]);
-      this.router.navigate(['/']);
+    this.gameService.resetGame().subscribe((response) => {
+      if (!('data' in response)) {
+        return this.goToHomePage();
+      }
+
+      this.setPlayers(response.data['players'] as IPlayer[]);
+      this.goToHomePage();
     });
   }
 
@@ -53,7 +63,19 @@ export class GameComponent implements OnInit {
     setTimeout(() => {
       this.gameService
         .resolveGameTurn(this.choices.playerChoice as string)
-        .subscribe(({ data }) => {
+        .subscribe((response) => {
+          if (!('data' in response)) {
+            setTimeout(() => {
+              this.handleMessage('Something went wrong, resetting...');
+
+              setTimeout(() => {
+                this.resetTurn();
+              }, 2000);
+            }, 2000);
+            return;
+          }
+
+          const { data } = response;
           this.handleChoice({
             type: 'computer',
             value: data['computerChoice'] as string,
@@ -62,24 +84,25 @@ export class GameComponent implements OnInit {
           setTimeout(() => {
             this.setPlayers(data['players'] as IPlayer[]);
             this.showTurnOutcome(
-              data['turnResult'] as number,
-              data['damageTaken'] as number
+              data['message'] as string,
+              data['gameOver'] as boolean
             );
           }, 2000);
         });
     }, 1000);
   }
 
-  private showTurnOutcome(turnResult: number, damage: number) {
+  private showTurnOutcome(message: string, gameOver: boolean) {
     const { player, computer } = <{ player: IPlayer; computer: IPlayer }>(
       this.players
     );
-    this.setTurnMessage(turnResult, damage);
+    this.handleMessage(message);
     setTimeout(() => {
-      if (!this.isGameOver()) {
+      if (!gameOver) {
         return this.resetTurn();
       }
-      this.router.navigate(['/outcome'], {
+
+      this._router.navigate(['/outcome'], {
         queryParams: {
           winner: (computer.health == 0 ? player : computer).name,
         },
@@ -95,42 +118,44 @@ export class GameComponent implements OnInit {
     }, 1000);
   }
 
-  private prepare() {
-    this.gameService
-      .getPlayerOptions()
-      .subscribe(
-        ({ data }: IResponse) => (this.options = data['options'] as Option[])
-      );
-    this.gameService.getPlayers().subscribe(({ data }: IResponse) => {
-      this.setPlayers(data['players'] as IPlayer[]);
+  private fetchOptions() {
+    this.gameService.getPlayerOptions().subscribe((response) => {
+      if (!('data' in response)) {
+        return this.goToHomePage();
+      }
+
+      this.options = response.data['options'] as Option[];
     });
+  }
+
+  private fetchPlayers() {
+    this.gameService.getPlayers().subscribe((response) => {
+      if (!('data' in response)) {
+        return this.goToHomePage();
+      }
+
+      this.setPlayers(response.data['players'] as IPlayer[]);
+    });
+  }
+
+  private prepare() {
+    this.fetchOptions();
+    this.fetchPlayers();
   }
 
   private handleMessage(msg: string) {
     this.message = msg;
   }
 
-  private setTurnMessage(turnResult: number, damage: number) {
-    let message = 'DRAW: NO ONE TOOK DAMAGE';
-
-    if (turnResult != 0) {
-      message =
-        turnResult == 1
-          ? `WIN: YOU'VE DEALT ${damage} damage to the enemy`
-          : `LOST: YOU'VE TAKEN ${damage} from the enemy`;
-    }
-    this.handleMessage(message);
-  }
-
-  private isGameOver() {
-    return Object.keys(this.players).some(
-      (type) => this.players[type].health == 0
-    );
-  }
-
   private setPlayers(players: IPlayer[]) {
     players.forEach((player: IPlayer) => {
       this.players[player.type] = player;
+    });
+  }
+
+  private goToHomePage() {
+    this._ngZone.run(() => {
+      this._router.navigate(['/']);
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, of } from 'rxjs';
 
 export interface IResponse {
   data: Record<string, unknown>;
@@ -12,23 +12,46 @@ export interface IResponse {
 export class GameService {
   constructor(private http: HttpClient) {}
 
-  getPlayerOptions(): Observable<IResponse> {
-    return this.http.get<IResponse>('http://localhost:8080/api/game/options');
+  getPlayerOptions(): Observable<IResponse | HttpErrorResponse> {
+    return this.http
+      .get<IResponse>('http://localhost:8080/api/game/options')
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          return of(error);
+        })
+      );
   }
 
-  getPlayers(): Observable<IResponse> {
-    return this.http.get<IResponse>('http://localhost:8080/api/game/players');
+  getPlayers(): Observable<IResponse | HttpErrorResponse> {
+    return this.http
+      .get<IResponse>('http://localhost:8080/api/game/players')
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          return of(error);
+        })
+      );
   }
 
-  resolveGameTurn(playerChoice: string): Observable<IResponse> {
-    return this.http.post<IResponse>('http://localhost:8080/api/game/resolve', {
-      playerChoice,
-    });
+  resolveGameTurn(
+    playerChoice: string
+  ): Observable<IResponse | HttpErrorResponse> {
+    return this.http
+      .post<IResponse>('http://localhost:8080/api/game/resolve', {
+        playerChoice,
+      })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          return of(error);
+        })
+      );
   }
-  resetGame(): Observable<IResponse> {
-    return this.http.post<IResponse>(
-      'http://localhost:8080/api/game/reset',
-      {}
-    );
+  resetGame(): Observable<IResponse | HttpErrorResponse> {
+    return this.http
+      .post<IResponse>('http://localhost:8080/api/game/reset', {})
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          return of(error);
+        })
+      );
   }
 }

@@ -1,5 +1,5 @@
 <div class="player-container">
-  <app-health-bar currentHealth="{{ player.health }}" />
+  <progress class="health-bar" value="{{ player.health }}" max="100"></progress>
   <h3 class="player-title">{{ player.name }}</h3>
   <img
     class="player-avatar"

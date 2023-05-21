@@ -2,19 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { GameComponent } from './game.component';
-import {
-  PlayerAvatarComponent,
-  PlayerOptionsComponent,
-  HealthBarComponent,
-} from './components';
+import { PlayerAvatarComponent, PlayerOptionsComponent } from './components';
 
 @NgModule({
-  declarations: [
-    GameComponent,
-    PlayerAvatarComponent,
-    PlayerOptionsComponent,
-    HealthBarComponent,
-  ],
+  declarations: [GameComponent, PlayerAvatarComponent, PlayerOptionsComponent],
   imports: [CommonModule],
 })
 export class GameModule {}

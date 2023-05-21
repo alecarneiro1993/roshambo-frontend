@@ -32,7 +32,7 @@ describe('HomeComponent', () => {
     });
   });
 
-  fdescribe('navigation', () => {
+  describe('navigation', () => {
     it('navigates to Game page when the user presses ENTER', inject(
       [Router],
       (router: Router) => {
