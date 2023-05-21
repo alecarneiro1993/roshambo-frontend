@@ -25,10 +25,7 @@ export class GameComponent implements OnInit {
     private _ngZone: NgZone,
     private winnerService: WinnerService
   ) {
-    this.players = {
-      player: { name: '', type: '', image: '', health: 0 },
-      computer: { name: '', type: '', image: '', health: 0 },
-    };
+    this.players = {};
     this.options = [];
     this.choices = { playerChoice: null, computerChoice: null };
     this.message = '';

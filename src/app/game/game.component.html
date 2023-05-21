@@ -3,7 +3,7 @@
     <button id="reset-btn" class="game-btn" (click)="resetGame()">RESET</button>
   </div>
   <div id="game-container">
-    <div id="main-game-container">
+    <div id="main-game-container" *ngIf="players">
       <app-player-avatar [player]="players['player']" />
       <app-player-options
         [options]="options"
