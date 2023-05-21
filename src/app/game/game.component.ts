@@ -4,6 +4,7 @@ import { NgZone } from '@angular/core';
 
 import { IPlayer, IChoice } from '../shared/interfaces';
 import { Option } from '../shared/types';
+import { WinnerService } from '../shared/services';
 import { GameService } from './services';
 
 @Component({
@@ -21,7 +22,8 @@ export class GameComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private _router: Router,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private winnerService: WinnerService
   ) {
     this.players = {
       player: { name: '', type: '', image: '', health: 0 },
@@ -97,16 +99,16 @@ export class GameComponent implements OnInit {
       this.players
     );
     this.handleMessage(message);
+    this.winnerService.setWinner(
+      (computer.health == 0 ? player : computer).name
+    );
+
     setTimeout(() => {
       if (!gameOver) {
         return this.resetTurn();
       }
 
-      this._router.navigate(['/outcome'], {
-        queryParams: {
-          winner: (computer.health == 0 ? player : computer).name,
-        },
-      });
+      this._router.navigate(['/outcome']);
     }, 2000);
   }
 
@@ -121,6 +123,7 @@ export class GameComponent implements OnInit {
   private fetchOptions() {
     this.gameService.getPlayerOptions().subscribe((response) => {
       if (!('data' in response)) {
+        console.log('caralho');
         return this.goToHomePage();
       }
 

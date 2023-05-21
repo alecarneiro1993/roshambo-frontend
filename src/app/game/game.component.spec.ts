@@ -19,8 +19,9 @@ import { GameComponent } from './game.component';
 import { PlayerOptionsComponent, PlayerAvatarComponent } from './components';
 import { GameService } from './services';
 import { mockedResponses } from './mocked-responses';
+import { WinnerService } from '../shared/services';
 
-fdescribe('GameComponent', () => {
+describe('GameComponent', () => {
   let component: GameComponent;
   let fixture: ComponentFixture<GameComponent>;
   let httpTestingController: HttpTestingController;
@@ -33,7 +34,7 @@ fdescribe('GameComponent', () => {
         PlayerOptionsComponent,
       ],
       imports: [HttpClientTestingModule],
-      providers: [GameService],
+      providers: [GameService, WinnerService],
     }).compileComponents();
   }));
 
@@ -114,17 +115,16 @@ fdescribe('GameComponent', () => {
         playersRequest.flush({ data: { players: mockedResponses.players } });
       });
 
-      it('navigates back to the HomePage', async () => {
-        inject([Router], (router: Router) => {
+      it('navigates back to the HomePage', inject(
+        [Router],
+        async (router: Router) => {
           spyOn(router, 'navigate').and.stub();
 
           fixture.whenStable().then(() => {
             expect(router.navigate).toHaveBeenCalledWith(['/']);
           });
-
-          tick();
-        });
-      });
+        }
+      ));
     });
   });
 
@@ -248,11 +248,7 @@ fdescribe('GameComponent', () => {
           flush();
 
           fixture.whenStable().then(() => {
-            expect(router.navigate).toHaveBeenCalledWith(['/outcome'], {
-              queryParams: {
-                winner: 'Player 1 (You)',
-              },
-            });
+            expect(router.navigate).toHaveBeenCalledWith(['/outcome']);
           });
         })
       ));

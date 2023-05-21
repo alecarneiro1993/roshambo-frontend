@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { fireEvent, screen } from '@testing-library/angular';
+import { fireEvent } from '@testing-library/angular';
 
 import { HomeComponent } from './home.component';
+import { By } from '@angular/platform-browser';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -32,18 +33,19 @@ describe('HomeComponent', () => {
     });
   });
 
-  describe('navigation', () => {
-    it('navigates to Game page when the user presses ENTER', inject(
-      [Router],
-      (router: Router) => {
-        spyOn(router, 'navigate').and.stub();
-        fireEvent.keyDown(screen.getByText(/ENTER/), {
+  describe('when user presses ENTER', () => {
+    it('navigates to Game page', inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+
+      fireEvent.keyDown(
+        fixture.debugElement.query(By.css('#prompt')).nativeElement,
+        {
           key: 'Enter',
           code: 'Enter',
           charCode: 13,
-        });
-        expect(router.navigate).toHaveBeenCalledWith(['game']);
-      }
-    ));
+        }
+      );
+      expect(router.navigate).toHaveBeenCalledWith(['game']);
+    }));
   });
 });
