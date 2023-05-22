@@ -30,6 +30,8 @@ typescript
 To run this effectively, you will need the backend from [roshambo][roshambo-git].
 Make sure to get a server there up and running.
 
+Meanwhile, you can run `npm install` to install dependencies.
+
 ## ESLint and Prettier
 
 This application uses [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) as its linter and formatter.
