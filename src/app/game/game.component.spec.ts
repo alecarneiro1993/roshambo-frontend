@@ -91,13 +91,13 @@ describe('GameComponent', () => {
           expect(
             mockedResponses.options.includes(option.nativeElement.textContent)
           );
-          expect(option.classes['option-btn-disable']).toBeFalsy();
+          expect(option.classes['option-btn-disabled']).toBeFalsy();
         });
         computerOptions.forEach((option) => {
           expect(
             mockedResponses.options.includes(option.nativeElement.textContent)
           );
-          expect(option.classes['option-btn-disable']).toBeTruthy();
+          expect(option.classes['option-btn-disabled']).toBeTruthy();
         });
       });
     });
