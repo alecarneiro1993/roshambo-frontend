@@ -2,9 +2,9 @@
   <button
     *ngFor="let option of options"
     [ngClass]="{
-      'option-btn-disable': playerType === 'computer',
+      'option-btn-disabled': playerType === 'computer',
       'option-btn-current-choice': currentChoice === option,
-      'option-btn-disable-turn': !isAbleToPlay,
+      'option-btn-disabled-turn': !isAbleToPlay,
     }"
     [disabled]="playerType !== 'player'"
     (click)="handleChoice(playerType, option)"
