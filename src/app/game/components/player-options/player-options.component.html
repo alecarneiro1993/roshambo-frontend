@@ -1,10 +1,10 @@
-<div class="player-options">
+<div id="{{ playerType }}-options-container" class="player-options">
   <button
     *ngFor="let option of options"
     [ngClass]="{
-      'player-option-btn-disable': playerType !== 'player',
-      'player-option-btn-current-choice': currentChoice === option,
-      'player-option-btn-disable-turn': !isAbleToPlay
+      'option-btn-disabled': playerType === 'computer',
+      'option-btn-current-choice': currentChoice === option,
+      'option-btn-disabled-turn': !isAbleToPlay,
     }"
     [disabled]="playerType !== 'player'"
     (click)="handleChoice(playerType, option)"

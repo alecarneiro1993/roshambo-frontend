@@ -5,7 +5,7 @@ import { HomeComponent } from './home';
 import { GameComponent } from './game';
 import { OutcomeComponent } from './outcome';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,

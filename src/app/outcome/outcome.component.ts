@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { WinnerService } from '../shared/services';
 
 @Component({
   selector: 'app-outcome',
@@ -7,10 +8,10 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./outcome.component.sass'],
 })
 export class OutcomeComponent implements OnInit {
-  public winner: string;
+  public winner: string | null;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    this.winner = route.snapshot.queryParams['winner'];
+  constructor(private router: Router, private winnerService: WinnerService) {
+    this.winner = winnerService.getWinner();
   }
 
   ngOnInit() {

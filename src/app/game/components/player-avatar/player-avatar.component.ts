@@ -8,9 +8,9 @@ import { IPlayer } from 'src/app/shared/interfaces';
   styleUrls: ['./player-avatar.component.sass'],
 })
 export class PlayerAvatarComponent {
-  @Input() player: IPlayer;
+  @Input() player: IPlayer | null;
 
   constructor() {
-    this.player = { name: '', type: '', image: '', health: 0 };
+    this.player = null;
   }
 }
