@@ -2,7 +2,7 @@
 
 Angular Frontend application that works together with [roshambo][roshambo-git].
 
-## Welcome!
+## Welcome
 
 To an exciting fighting game of :rock: :newspaper_roll: :scissors:
 
