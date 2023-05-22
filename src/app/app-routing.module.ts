@@ -5,6 +5,9 @@ import { HomeComponent } from './home';
 import { GameComponent } from './game';
 import { OutcomeComponent } from './outcome';
 
+/**
+ * Route Map of the application
+ */
 export const routes: Routes = [
   {
     path: '',

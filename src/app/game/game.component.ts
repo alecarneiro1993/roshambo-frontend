@@ -7,6 +7,11 @@ import { Option } from '../shared/types';
 import { WinnerService } from '../shared/services';
 import { GameService } from './services';
 
+/**
+ * Component that handles the Game and its playthrough
+ * with the help of its child components
+ * Handles all game related logic and API responses.
+ */
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -19,10 +24,15 @@ export class GameComponent implements OnInit {
   public message: string;
   public isAbleToPlay: boolean;
 
+  /**
+   * Constructor
+   * Injects the necessary services when initialized
+   * as well as initializing the view data
+   */
   constructor(
     private gameService: GameService,
-    private _router: Router,
-    private _ngZone: NgZone,
+    private router: Router,
+    private ngZone: NgZone,
     private winnerService: WinnerService
   ) {
     this.players = {};
@@ -32,10 +42,24 @@ export class GameComponent implements OnInit {
     this.isAbleToPlay = true;
   }
 
+  /**
+   * Prepares the game, making requests to fetch
+   * the options and the players information
+   */
   ngOnInit() {
     this.prepare();
   }
 
+  /**
+   * Updates the player or computer choice for the turn
+   * The player's choice is handled via Event transmission
+   * in the `PlayerOptionsComponent`, while the computer's choice
+   * is handled when the API replies with the data.
+   *
+   * @param event - contains type (string) and value (string)
+   *    @param type - either 'player' or 'computer''
+   *    @param value - one of the available Options.
+   */
   handleChoice({ type, value }: { type: string; value: string }): void {
     if (!this.isAbleToPlay && type == 'player') return;
 
@@ -45,6 +69,10 @@ export class GameComponent implements OnInit {
     };
   }
 
+  /**
+   * Makes a request to the API to reset the players health
+   * In case the API is unreachable, returns to the home page
+   */
   resetGame() {
     this.gameService.resetGame().subscribe((response) => {
       if (!('data' in response)) {
@@ -56,6 +84,18 @@ export class GameComponent implements OnInit {
     });
   }
 
+  /**
+   * Makes a request to the API to resolve the Turn, provided
+   * the player has selected one of the options
+   *
+   * Upon response from the API, shows the player
+   * the computer's choice, the turn outcome,
+   * a message displaying how much damage was taken or given.
+   *
+   * If the game is over, redirects to `/outcome`
+   *
+   * In case API is unreachable, resets the turn
+   */
   submit() {
     this.isAbleToPlay = false;
     this.handleMessage('Attacking');
@@ -91,6 +131,12 @@ export class GameComponent implements OnInit {
     }, 1000);
   }
 
+  /**
+   * Handles the response from `/resolve`
+   *
+   * If the game isn't over, resets the turn
+   * otherwise, it redirects the user to `/outcome`
+   */
   private showTurnOutcome(message: string, gameOver: boolean) {
     const { player, computer } = <{ player: IPlayer; computer: IPlayer }>(
       this.players
@@ -105,10 +151,16 @@ export class GameComponent implements OnInit {
         return this.resetTurn();
       }
 
-      this._router.navigate(['/outcome']);
+      this.router.navigate(['/outcome']);
     }, 2000);
   }
 
+  /**
+   * Resets the Turn after a given time
+   * by setting all necessary variables
+   * back to their initial values.
+   *
+   */
   private resetTurn() {
     setTimeout(() => {
       this.choices = { playerChoice: null, computerChoice: null };
@@ -117,6 +169,10 @@ export class GameComponent implements OnInit {
     }, 1000);
   }
 
+  /**
+   * Makes a request to `/options` and handles the response
+   * accordingly
+   */
   private fetchOptions() {
     this.gameService.getPlayerOptions().subscribe((response) => {
       if (!('data' in response)) {
@@ -127,6 +183,10 @@ export class GameComponent implements OnInit {
     });
   }
 
+  /**
+   * Makes a request to `/players` and handles the response
+   * accordingly
+   */
   private fetchPlayers() {
     this.gameService.getPlayers().subscribe((response) => {
       if (!('data' in response)) {
@@ -137,24 +197,36 @@ export class GameComponent implements OnInit {
     });
   }
 
+  /**
+   * Prepares the game by making the initial requests
+   */
   private prepare() {
     this.fetchOptions();
     this.fetchPlayers();
   }
 
+  /**
+   * Setter for message
+   */
   private handleMessage(msg: string) {
     this.message = msg;
   }
 
+  /**
+   * Setter for players
+   */
   private setPlayers(players: IPlayer[]) {
     players.forEach((player: IPlayer) => {
       this.players[player.type] = player;
     });
   }
 
+  /**
+   * Redirects user to the initial page
+   */
   private goToHomePage() {
-    this._ngZone.run(() => {
-      this._router.navigate(['/']);
+    this.ngZone.run(() => {
+      this.router.navigate(['/']);
     });
   }
 }
