@@ -33,6 +33,7 @@ Make sure to get a server there up and running.
 ## ESLint and Prettier
 
 This application uses [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) as its linter and formatter.
+
 ## Get Server up
 
 To do that, just run `ng serve` (provided you have `ng` CLI installed);
