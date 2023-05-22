@@ -6,6 +6,7 @@ import { IPlayer, IChoice } from '../shared/interfaces';
 import { Option } from '../shared/types';
 import { WinnerService } from '../shared/services';
 import { GameService } from './services';
+import { delay, of, tap } from 'rxjs';
 
 /**
  * Component that handles the Game and its playthrough
@@ -99,36 +100,29 @@ export class GameComponent implements OnInit {
   submit() {
     this.isAbleToPlay = false;
     this.handleMessage('Attacking');
-    setTimeout(() => {
-      this.gameService
-        .resolveGameTurn(this.choices.playerChoice as string)
-        .subscribe((response) => {
-          if (!('data' in response)) {
-            setTimeout(() => {
-              this.handleMessage('Something went wrong, resetting...');
+    this.gameService
+      .resolveGameTurn(this.choices.playerChoice as string)
+      .pipe(
+        delay(1000),
+        tap((response) => {
+          if ('data' in response) {
+            const { data } = response;
+            this.handleChoice({
+              type: 'computer',
+              value: data['computerChoice'] as string,
+            });
 
-              setTimeout(() => {
-                this.resetTurn();
-              }, 2000);
-            }, 2000);
-            return;
-          }
-
-          const { data } = response;
-          this.handleChoice({
-            type: 'computer',
-            value: data['computerChoice'] as string,
-          });
-
-          setTimeout(() => {
             this.setPlayers(data['players'] as IPlayer[]);
             this.showTurnOutcome(
               data['message'] as string,
               data['gameOver'] as boolean
             );
-          }, 2000);
-        });
-    }, 1000);
+          } else {
+            this.goToHomePage();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -146,27 +140,26 @@ export class GameComponent implements OnInit {
       (computer.health == 0 ? player : computer).name
     );
 
-    setTimeout(() => {
-      if (!gameOver) {
-        return this.resetTurn();
-      }
-
-      this.router.navigate(['/outcome']);
-    }, 2000);
+    of(null)
+      .pipe(delay(2000))
+      .subscribe(() => {
+        !gameOver ? this.resetTurn() : this.router.navigate(['/outcome']);
+      });
   }
 
   /**
    * Resets the Turn after a given time
    * by setting all necessary variables
    * back to their initial values.
-   *
    */
   private resetTurn() {
-    setTimeout(() => {
-      this.choices = { playerChoice: null, computerChoice: null };
-      this.handleMessage('');
-      this.isAbleToPlay = true;
-    }, 1000);
+    of(null)
+      .pipe(delay(1000))
+      .subscribe(() => {
+        this.choices = { playerChoice: null, computerChoice: null };
+        this.handleMessage('');
+        this.isAbleToPlay = true;
+      });
   }
 
   /**

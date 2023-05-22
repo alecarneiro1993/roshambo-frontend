@@ -208,8 +208,6 @@ describe('GameComponent', () => {
         component.choices.playerChoice = 'ROCK';
         component.submit();
 
-        flush();
-
         const resolveRequest = httpTestingController.expectOne(
           'http://localhost:8080/api/game/resolve'
         );
@@ -224,10 +222,9 @@ describe('GameComponent', () => {
         expect(component.players['player']['health']).toEqual(100);
         expect(component.players['computer']['health']).toEqual(75);
 
-        flush();
+        tick(2000);
 
         expect(component.message).toEqual('');
-        flush();
       }));
 
       it('navigates to /outcome if game is over', fakeAsync(
@@ -237,7 +234,7 @@ describe('GameComponent', () => {
           component.choices.playerChoice = 'ROCK';
           component.submit();
 
-          flush();
+          tick(1000);
 
           const resolveTurnRequest = httpTestingController.expectOne(
             'http://localhost:8080/api/game/resolve'
@@ -245,7 +242,8 @@ describe('GameComponent', () => {
           resolveTurnRequest.flush({
             data: mockedResponses.gameOver,
           });
-          flush();
+
+          tick(3000);
 
           fixture.whenStable().then(() => {
             expect(router.navigate).toHaveBeenCalledWith(['/outcome']);
