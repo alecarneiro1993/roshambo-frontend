@@ -6,12 +6,20 @@ export interface IResponse {
   data: Record<string, unknown>;
 }
 
+/**
+ * Service that sends game related requests to the API
+ * with prefix "/api/game/*"
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
   constructor(private http: HttpClient) {}
 
+  /**
+   * GET Request made when first preparing the Game to fetch
+   * available options
+   */
   getPlayerOptions(): Observable<IResponse | HttpErrorResponse> {
     return this.http
       .get<IResponse>('http://localhost:8080/api/game/options')
@@ -22,6 +30,10 @@ export class GameService {
       );
   }
 
+  /**
+   * GET Request made when first preparing the Game to fetch
+   * players
+   */
   getPlayers(): Observable<IResponse | HttpErrorResponse> {
     return this.http
       .get<IResponse>('http://localhost:8080/api/game/players')
@@ -32,6 +44,10 @@ export class GameService {
       );
   }
 
+  /**
+   * POST Request made every time the user chooses an option and
+   * clicks on the "FIGHT" button
+   */
   resolveGameTurn(
     playerChoice: string
   ): Observable<IResponse | HttpErrorResponse> {
@@ -45,6 +61,10 @@ export class GameService {
         })
       );
   }
+
+  /**
+   * POST Request made when the user clicks on the "RESET" button
+   */
   resetGame(): Observable<IResponse | HttpErrorResponse> {
     return this.http
       .post<IResponse>('http://localhost:8080/api/game/reset', {})
