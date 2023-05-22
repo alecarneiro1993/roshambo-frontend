@@ -36,6 +36,11 @@ Meanwhile, you can run `npm install` to install dependencies.
 
 This application uses [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) as its linter and formatter.
 
+## Documentation
+
+Initially the idea was to use something like [compodoc](https://compodoc.app/),
+but this project is simple, so it uses TSDoc.
+
 ## Get Server up
 
 To do that, just run `ng serve` (provided you have `ng` CLI installed);
