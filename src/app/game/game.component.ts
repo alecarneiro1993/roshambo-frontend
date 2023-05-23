@@ -4,9 +4,9 @@ import { NgZone } from '@angular/core';
 
 import { IPlayer, IChoice } from '../shared/interfaces';
 import { Option } from '../shared/types';
-import { WinnerService } from '../shared/services';
+import { WinnerService, LoggerService } from '../shared/services';
 import { GameService } from './services';
-import { delay, of, tap } from 'rxjs';
+import { delay, forkJoin, of, tap } from 'rxjs';
 
 /**
  * Component that handles the Game and its playthrough
@@ -34,7 +34,8 @@ export class GameComponent implements OnInit {
     private gameService: GameService,
     private router: Router,
     private ngZone: NgZone,
-    private winnerService: WinnerService
+    private winnerService: WinnerService,
+    private logger: LoggerService
   ) {
     this.players = {};
     this.options = [];
@@ -77,9 +78,11 @@ export class GameComponent implements OnInit {
   resetGame() {
     this.gameService.resetGame().subscribe((response) => {
       if (!('data' in response)) {
+        this.logger.error('Something went wrong: redirecting to HomePage');
         return this.goToHomePage();
       }
 
+      this.logger.log('** Resetting Game **');
       this.setPlayers(response.data['players'] as IPlayer[]);
       this.goToHomePage();
     });
@@ -98,8 +101,9 @@ export class GameComponent implements OnInit {
    * In case API is unreachable, resets the turn
    */
   submit() {
+    this.logger.log('** Resolving Turn **');
     this.isAbleToPlay = false;
-    this.handleMessage('Attacking');
+    this.message = 'Attacking';
     this.gameService
       .resolveGameTurn(this.choices.playerChoice as string)
       .pipe(
@@ -118,6 +122,7 @@ export class GameComponent implements OnInit {
               data['gameOver'] as boolean
             );
           } else {
+            this.logger.error('Something went wrong: redirecting to HomePage');
             this.goToHomePage();
           }
         })
@@ -129,13 +134,13 @@ export class GameComponent implements OnInit {
    * Handles the response from `/resolve`
    *
    * If the game isn't over, resets the turn
-   * otherwise, it redirects the user to `/outcome`
+   * otherwise, it ends the game.
    */
   private showTurnOutcome(message: string, gameOver: boolean) {
     const { player, computer } = <{ player: IPlayer; computer: IPlayer }>(
       this.players
     );
-    this.handleMessage(message);
+    this.message = message;
     this.winnerService.setWinner(
       (computer.health == 0 ? player : computer).name
     );
@@ -143,8 +148,16 @@ export class GameComponent implements OnInit {
     of(null)
       .pipe(delay(2000))
       .subscribe(() => {
-        !gameOver ? this.resetTurn() : this.router.navigate(['/outcome']);
+        !gameOver ? this.resetTurn() : this.endGame();
       });
+  }
+
+  /**
+   * Redirects the user to the outcome page
+   */
+  private endGame() {
+    this.logger.log('** We have a WINNER! END OF GAME! **');
+    this.router.navigate(['/outcome']);
   }
 
   /**
@@ -156,53 +169,32 @@ export class GameComponent implements OnInit {
     of(null)
       .pipe(delay(1000))
       .subscribe(() => {
+        this.logger.log('** Turn Processed - Resetting **');
         this.choices = { playerChoice: null, computerChoice: null };
-        this.handleMessage('');
+        this.message = '';
         this.isAbleToPlay = true;
       });
-  }
-
-  /**
-   * Makes a request to `/options` and handles the response
-   * accordingly
-   */
-  private fetchOptions() {
-    this.gameService.getPlayerOptions().subscribe((response) => {
-      if (!('data' in response)) {
-        return this.goToHomePage();
-      }
-
-      this.options = response.data['options'] as Option[];
-    });
-  }
-
-  /**
-   * Makes a request to `/players` and handles the response
-   * accordingly
-   */
-  private fetchPlayers() {
-    this.gameService.getPlayers().subscribe((response) => {
-      if (!('data' in response)) {
-        return this.goToHomePage();
-      }
-
-      this.setPlayers(response.data['players'] as IPlayer[]);
-    });
   }
 
   /**
    * Prepares the game by making the initial requests
    */
   private prepare() {
-    this.fetchOptions();
-    this.fetchPlayers();
-  }
-
-  /**
-   * Setter for message
-   */
-  private handleMessage(msg: string) {
-    this.message = msg;
+    this.logger.log('** Preparing the Game **');
+    forkJoin([
+      this.gameService.getPlayerOptions(),
+      this.gameService.getPlayers(),
+    ]).subscribe((responses) => {
+      const [optionsResponse, playersResponse] = responses;
+      if ('data' in optionsResponse && 'data' in playersResponse) {
+        this.options = optionsResponse.data['options'] as Option[];
+        this.setPlayers(playersResponse.data['players'] as IPlayer[]);
+        this.logger.log('** Game Ready - ENJOY **');
+      } else {
+        this.logger.error('Something went wrong: redirecting to HomePage');
+        this.goToHomePage();
+      }
+    });
   }
 
   /**

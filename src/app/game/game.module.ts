@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { GameComponent } from './game.component';
 import { PlayerAvatarComponent, PlayerOptionsComponent } from './components';
-import { WinnerService } from '../shared/services';
+import { LoggerService, WinnerService } from '../shared/services';
 
 @NgModule({
-  providers: [WinnerService],
+  providers: [WinnerService, LoggerService],
   declarations: [GameComponent, PlayerAvatarComponent, PlayerOptionsComponent],
   imports: [CommonModule],
 })
