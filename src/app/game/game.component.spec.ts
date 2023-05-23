@@ -4,7 +4,6 @@ import {
   inject,
   fakeAsync,
   tick,
-  flush,
   waitForAsync,
 } from '@angular/core/testing';
 import {
@@ -19,14 +18,16 @@ import { GameComponent } from './game.component';
 import { PlayerOptionsComponent, PlayerAvatarComponent } from './components';
 import { GameService } from './services';
 import { mockedResponses } from './mocked-responses';
-import { WinnerService } from '../shared/services';
+import { WinnerService, LoggerService } from '../shared/services';
 
 describe('GameComponent', () => {
   let component: GameComponent;
   let fixture: ComponentFixture<GameComponent>;
   let httpTestingController: HttpTestingController;
+  let loggerSpy: jasmine.SpyObj<LoggerService>;
 
   beforeEach(waitForAsync(() => {
+    loggerSpy = jasmine.createSpyObj('LoggerService', ['log', 'warn', 'error']);
     TestBed.configureTestingModule({
       declarations: [
         GameComponent,
@@ -34,7 +35,11 @@ describe('GameComponent', () => {
         PlayerOptionsComponent,
       ],
       imports: [HttpClientTestingModule],
-      providers: [GameService, WinnerService],
+      providers: [
+        GameService,
+        WinnerService,
+        { provide: LoggerService, useValue: loggerSpy },
+      ],
     }).compileComponents();
   }));
 
@@ -64,8 +69,10 @@ describe('GameComponent', () => {
       });
 
       it('renders the player Avatar and health Bar', async () => {
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Preparing the Game **');
         await fixture.whenStable();
         fixture.detectChanges();
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Game Ready - ENJOY **');
 
         const healthBars = fixture.debugElement.queryAll(By.css('.health-bar'));
         const avatars = fixture.debugElement.queryAll(By.css('.player-avatar'));
@@ -77,8 +84,10 @@ describe('GameComponent', () => {
       });
 
       it('renders the player and computer Options', async () => {
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Preparing the Game **');
         await fixture.whenStable();
         fixture.detectChanges();
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Game Ready - ENJOY **');
 
         const playerOptions = fixture.debugElement
           .query(By.css('#player-options-container'))
@@ -118,8 +127,14 @@ describe('GameComponent', () => {
       it('navigates back to the HomePage', inject(
         [Router],
         async (router: Router) => {
+          expect(loggerSpy.log).toHaveBeenCalledWith(
+            '** Preparing the Game **'
+          );
           spyOn(router, 'navigate').and.stub();
 
+          expect(loggerSpy.error).toHaveBeenCalledWith(
+            'Something went wrong: redirecting to HomePage'
+          );
           fixture.whenStable().then(() => {
             expect(router.navigate).toHaveBeenCalledWith(['/']);
           });
@@ -184,6 +199,8 @@ describe('GameComponent', () => {
         // Click on FIGHT
         getFightBtn().nativeElement.click();
 
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Resolving Turn **');
+
         //Click on Paper
         optionBtns[1].nativeElement.click();
 
@@ -208,6 +225,8 @@ describe('GameComponent', () => {
         component.choices.playerChoice = 'ROCK';
         component.submit();
 
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Resolving Turn **');
+
         const resolveRequest = httpTestingController.expectOne(
           'http://localhost:8080/api/game/resolve'
         );
@@ -225,6 +244,9 @@ describe('GameComponent', () => {
         tick(2000);
 
         expect(component.message).toEqual('');
+        expect(loggerSpy.log).toHaveBeenCalledWith(
+          '** Turn Processed - Resetting **'
+        );
       }));
 
       it('navigates to /outcome if game is over', fakeAsync(
@@ -244,6 +266,10 @@ describe('GameComponent', () => {
           });
 
           tick(3000);
+
+          expect(loggerSpy.log).toHaveBeenCalledWith(
+            '** We have a WINNER! END OF GAME! **'
+          );
 
           fixture.whenStable().then(() => {
             expect(router.navigate).toHaveBeenCalledWith(['/outcome']);
@@ -279,6 +305,8 @@ describe('GameComponent', () => {
         );
 
         resetRequest.flush({ data: { players: mockedResponses.players } });
+
+        expect(loggerSpy.log).toHaveBeenCalledWith('** Resetting Game **');
 
         fixture.whenStable().then(() => {
           expect(router.navigate).toHaveBeenCalledWith(['/']);
