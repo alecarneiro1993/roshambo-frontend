@@ -202,7 +202,7 @@ export class GameComponent implements OnInit {
    */
   private setPlayers(players: IPlayer[]) {
     players.forEach((player: IPlayer) => {
-      this.players[player.type] = player;
+      this.players[player.type.toLowerCase()] = player;
     });
   }
 
