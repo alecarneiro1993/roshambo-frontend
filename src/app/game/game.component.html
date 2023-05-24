@@ -11,14 +11,14 @@
       <app-player-options
         [options]="options"
         currentChoice="{{ choices.playerChoice }}"
-        playerType="{{ players['player'].type }}"
+        playerType="{{ players['player'].type.toLowerCase() }}"
         [isAbleToPlay]="isAbleToPlay"
         (setPlayerChoice)="handleChoice($event)"
       />
       <app-player-options
         [options]="options"
         currentChoice="{{ choices.computerChoice }}"
-        playerType="{{ players['computer'].type }}"
+        playerType="{{ players['computer'].type.toLowerCase() }}"
       />
       <app-player-avatar [player]="players['computer']" />
     </div>
